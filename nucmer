@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Perform Nucmer analysis with deult parameters
+  # [Borrelia_tachyglossi_1268-Bc-F10.fasta] is the reference genome
+    # [ref-RF-LB-bor-chroms.fasta] contains RF and LB chromosomes from 
+                       
+    $ nucmer -p nucmer-out --coords Borrelia_tachyglossi_1268-Bc-F10.fasta ref-RF-LB-bor-chroms.fasta 
+
+# inspect preview of output coordinate file [nucmer-out.coords]
+  
+    $ cat nucmer-out.coords | head
+  
+   [S1]     [E1]  |     [S2]     [E2]  |  [LEN 1]  [LEN 2]  |  [% IDY]  | [TAGS]
+=====================================================================================
+      11     2327  |     1066     3387  |     2317     2322  |    81.87  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_hermsii_DAH
+      13      985  |       63     1035  |      973      973  |    83.61  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_miyamotoi_LB-2001
+      16      971  |      735     1690  |      956      956  |    82.76  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_parkeri_HR1
+     103      985  |        1      883  |      883      883  |    81.69  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_anserina_BA2
+    1127     2466  |     1028     2367  |     1340     1340  |    79.38  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_anserina_BA2
+    2598     3111  |     3672     4185  |      514      514  |    83.43  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_hermsii_DAH
+    4466     6609  |     5093     7232  |     2144     2140  |    83.69  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_miyamotoi_LB-2001
+    6661    19274  |     7740    20349  |    12614    12610  |    84.56  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_hermsii_DAH
+    6679    19299  |     7440    20028  |    12621    12589  |    84.21  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_parkeri_HR1
+    6690    16055  |     9728    19088  |     9366     9361  |    81.86  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_crocidurae_str_Achema
+    6692    19299  |     6147    18760  |    12608    12614  |    83.24  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_anserina_BA2
+    6694    16055  |    19472    28828  |     9362     9357  |    81.93  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_duttonii_Ly
+    7696    17140  |     8355    17793  |     9445     9439  |    83.67  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_miyamotoi_LB-2001
+   12948    14898  |    13684    15638  |     1951     1955  |    78.60  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_burgdorferi_str_B31
+   17477    18970  |    18215    19708  |     1494     1494  |    77.57  | Borrelia_tachyglossi_1268-Bc-F10_chromosome_final_scaffold	Borrelia_burgdorferi_str_B31
+
+# Get number of nucmer matches for each reference genome from nucmer-out.coords
+    
+    $ cat nucmer-out.coords | grep '\Borrelia_duttonii_Ly$'
+          155
+    $ cat nucmer-out.coords | grep -c '\Borrelia_crocidurae_str_Achema$'
+          157
+    $ cat nucmer-out.coords | grep -c '\Borrelia_hermsii_DAH$'
+          147
+    $ cat nucmer-out.coords | grep -c '\Borrelia_miyamotoi_LB-2001$'
+          153
+    $ cat nucmer-out.coords | grep -c '\Borrelia_parkeri_HR1$'
+          146
+    $ cat nucmer-out.coords | grep -c '\Borrelia_anserina_BA2$'
+          149
+    $ cat nucmer-out.coords | grep -c '\Borrelia_burgdorferi_str_B31$'
+          75
+    $ cat nucmer-out.coords | grep -c '\Borrelia_garinii_PBi$'
+          67
+    $ cat nucmer-out.coords | grep -c '\Borrelia_afzelii_PKo$'
+          77
+
+# Plot output with mummerplot in with and without colour grading
+  # [nucmer-out.delta] is output from nucmer
+  
+   $ mummerplot --prefix numcer-colour-plot --postscript --color nucmer-out.delta 
+
+    $ mummerplot --prefix numcer-defult-plot --postscript nucmer-out.delta 
+
