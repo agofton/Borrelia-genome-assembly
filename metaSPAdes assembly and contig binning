@@ -1,0 +1,42 @@
+!#/bin/bash
+
+# metaSPAdes assembly
+  # [host-filter-reads.fastq] are paired-end reads that did not map to host genomes
+
+    $ spades.py -meta --pe1-12 host-filter-reads.fastq -k 21,33,55,73 -out metaSPAdes-assembly-out
+    
+# BLAST contigs agains GenBank nt
+  # outfmt '6 sscinames std' makes searching and parsing results easy.
+    # taxdb must also be installed to make ID of Borrelia hits easy.
+
+    $ nohup blastn -task megablast -query contigs.fasta /
+    -db /data/blast-nt-db/nt /
+    -outfmt '6 sscinames std' /
+    -max_target_seqs 10 /
+    -max_hsps 10 /
+    -out contigs-blast-out.txt &
+ 
+# Search and parse contigs that hit Borrelia chromosome or plasmid refernce seqs
+
+  # preview blast output
+  
+    $ cat contigs-blast-out.txt | head
+    
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	84.042	54901	8172	468	463229	517790	328979	274329	0.0	52303
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	85.922	25834	3493	126	261501	287257	523391	497625	0.0	27425
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	85.086	26459	3675	209	5105	31416	776352	750018	0.0	26749
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	83.337	29016	4482	268	415596	444433	374109	345269	0.0	26470
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	84.217	23487	3478	179	658571	681937	137649	114272	0.0	22624
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	83.304	24676	3853	217	160953	185502	622142	597608	0.0	22497
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	85.146	21422	2985	159	374047	395351	416122	394781	0.0	21749
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	82.979	22925	3669	194	717922	740723	79976	57162	0.0	20502
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	83.407	21383	3277	203	518160	539396	273887	252630	0.0	19581
+Borrelia parkeri SLO	NODE_1_length_794884_cov_97.098543	CP005851.2	83.769	20873	3132	191	549567	570296	243110	222351	0.0	19540
+
+    
+  # extract contigs that have Borrelia hits
+    
+    $ cat contigs-blast-out.txt | grep "^Borellia" | awk -F "/t" '{print $2}' > contigs-borrelia-hits-seqIDs.txt
+    
+    $ usearch9.2 -fastx_getseqs contigs.fasta -labels contigs-borrelia-hits-seqIDs.txt -fastaout contigs-borrelia-hits.fasta
+    
