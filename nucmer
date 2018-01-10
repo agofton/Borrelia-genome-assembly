@@ -49,6 +49,12 @@
     $ cat nucmer-out.coords | grep -c '\Borrelia_afzelii_PKo$'
           77
 
+# Pull out RF and LB only nucmer matches
+
+cat nucmer-out.coords | grep -E "(\Borrelia_parkeri_HR1$|\Borrelia_hermsii_DAH|\Borrelia_miyamotoi_LB-2001$|\Borrelia_parkeri_HR1$|\Borrelia_anserina_BA2$|\Borrelia_crocidurae_str_Achema$|\Borrelia_duttonii_Ly$)" > RF.coords
+
+cat nucmer-out.coords | grep -E "(\Borrelia_burgdorferi_str_B31$|\Borrelia_garinii_PBi$|\Borrelia_afzelii_PKo$)" > LB.coords
+
 # Plot output with mummerplot in with and without colour grading
   # [nucmer-out.delta] is output from nucmer
   
